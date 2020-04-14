@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans
+	xmlns = "http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+						http://www.springframework.org/schema/beans/spring-beans-3.0.xsd"
+>
+
+	<bean id="mysql" class="di_step4.MySql"/>
+	<bean id="mssql" class="di_step4.MsSql"/>
+	<bean id="oracle" class="di_step4.Oracle"/>
+	
+	<bean id="assemble" class="di_step4.Assembler">
+		<constructor-arg ref='oracle'/><!-- 어셈블러라는 생성자에다가 ref아이디 값을 던져줘라 그리고 어셈블러라는 객체를 생성해서 그 아이디를 어셈블이라는 아이디로 생성해 놓아라 -->
+		<!-- constructor-arg==생성자의 매개변수 -->
+	</bean>
+	
+	<bean id='mVo' class='di_step4.MemberVo'><!-- 메서드를 통한 주입 -->
+		<property name='mId' 	value='kim C'/>
+		<property name='mName' 	value='김길동'/>
+	</bean>
+	
+	
+	
+	<bean id='MyConnection' class='di_step4.MyConnection'>
+		<property name='userName' value='김도경'/>
+		<property name='passWord' value='1234'/>
+	</bean>
+	<bean id='dao' class="di_step4.MemberDao">
+		<constructor-arg ref='MyConnection'></constructor-arg>
+	</bean>
+	
+</beans>
