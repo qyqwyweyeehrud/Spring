@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans
+	xmlns = "http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context = "http://www.springframework.org/schema/context"
+	xmlns:aop = "http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+						http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+						http://www.springframework.org/schema/context
+						http://www.springframework.org/schema/context/spring-context-3.0.xsd
+						http://www.springframework.org/schema/aop
+						http://www.springframework.org/schema/aop/spring-aop-3.0.xsd"
+>	
+	<context:annotation-config/>
+	
+
+	<bean id='board' class='aop_step3.BoardDao'></bean>
+	<bean id='member' class='aop_step3.MemberDao'></bean>
+	<bean id='advisor' class='aop_step3.Advisor'></bean>
+	
+	<!-- Spring AOP -->	
+	<bean id='proxy' class ='org.springframework.aop.framework.ProxyFactoryBean'><!-- 프록시에 의해 등록된 얘는 member -->
+		<property name="target" ref='member'></property><!-- 프로퍼티 네임을 내가 다른이름으로 바꿀수 없다 얘는 프록시팩토리빈이 가지고있는 필드이다  // aop_step3.MemberDao 를 주입-->
+		<property name="interceptorNames"><!-- setter가 실행 되는것이다 bean을 만들때 필드만 만들고 세터를 만들지 않으면 대입되지않는다 // interceptorNames에 springAdvisor라는 값이 들어가는것이다-->
+			<list>
+				<value>springAdvisor</value>
+			</list>
+		</property>
+	</bean>	
+	<!-- Advisor 와 member를 연결하는 작업을  springAdvisor가 할 것이다-->
+	<bean id='springAdvisor' class='org.springframework.aop.support.DefaultPointcutAdvisor'><!-- 위빙될 지점 // springAdvisor 에 PointcuntAdvisor 를 만들것이다-->
+		<property name="advice" ref='advisor'></property><!-- 포인트 어드바이저가하는 역할은 필드의 이름은 interceptorNames(가로채기하는 이름들)이고 이거의 중심은 advisor라고하는 클래스가 가지고있다-->
+		<property name="pointcut"><!-- 요기가 위빙될 지점  -->
+			<bean class='org.springframework.aop.support.JdkRegexpMethodPointcut'><!-- 요기가 위빙될 지점 을 정해주는것  -->
+				<property name="patterns"><!-- 얘도 list라는 타입을 가지고 있다 //어떤이름으로 가지고있는 메서드 들이냐?-->
+					<list>
+						<value> .*select.* </value> <!-- 어떤거에는 매개변수가 없고 어떤거에는 매개변수가 있기에 .*을 붙인다 // 모든매개변수를 포함하고있는 select  // 반환형이 다양할거 아니냐? 그것도 신경쓰지마라는 의미로 앞에 .*을 붙인다 // 즉 메서드가 select 를 딱 만나면 얘는 포인트 컷이라고 하거라 그래서 그곳의 분리된 관점이 위빙될것이다 // 위빙될 지점이 select이다 // 그냥 메서드 이름만 select면 되는 것-->
+						<value> .*modify.* </value>	<!-- 지금까지 내가 바꿀수 있는것은 여기있는 value 뿐이다 (위빙될 포인트컷 , 그 지점만 , 공간적개념)  -->
+						<value> .*view.* </value>	<!-- 얘네가 실행되기전에 오버라이딩한 invoke가 먼저 실행됨 -->
+						<value> .*delete.* </value>
+						<value> .*insert.* </value>
+					</list>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	
+	
+	
+</beans>
