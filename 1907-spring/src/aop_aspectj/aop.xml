@@ -22,7 +22,7 @@
 	<!-- aspectj -->
 	<aop:config>
 		<aop:aspect id='before' ref='advisor'> <!-- 타이밍으로 정의하는게 편하다 -->
-			<aop:pointcut expression='execution(* aop_aspectj.Dao.*(..))' id='beforePointCut'/> <!-- 위빙될 지점  // excution(반환타입 select(매개변수)) // ..은 상관없다 *는 모든것  // aop_aspectj.Dao.* 는 Dao의 모든 메서드-->
+			<aop:pointcut expression='execution(* aop_aspectj.Dao.*(..))' id='beforePointCut'/> <!-- 위빙될 지점  // execution(반환타입 select(매개변수)) // ..은 상관없다 *는 모든것  // aop_aspectj.Dao.* 는 Dao의 모든 메서드-->
 			<aop:before method='beforeMethod' pointcut-ref='beforePointCut'/><!-- select가 실행되지전에 advisor에 지정된 beforeMethod 메서드를 실행 시켜달라 -->
 		</aop:aspect>
 	</aop:config>

@@ -16,7 +16,7 @@
 	
 
 	<bean id="db" class="di_anno.Oracle"/>
-	<bean id="dao" class="di_anno.AnnoDao" /><!-- 어노테이션은 btType 이다 -->
+	<bean id="dao" class="di_anno.AnnoDao" /><!-- 어노테이션은 byType 이다 -->
 		
 		
 	
