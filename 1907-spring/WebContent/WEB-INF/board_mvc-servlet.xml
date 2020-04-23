@@ -17,13 +17,15 @@
    <context:annotation-config/>
    
    <!-- bean -->
+   <bean id='brdDao' class="bean.BoardMybatisDao"> </bean>
    
    <!-- controller -->
-   <bean id="brd_controller" class="controller.BoardController"/>
-   
+   <bean id="brd_controller" class="controller.BoardController">
+   		<constructor-arg ref='brdDao'></constructor-arg>
+   </bean>
    <!-- view resolver -->
    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-      <property name="prefix" value="index.jsp?inc=./board/"/>
+      <property name="prefix" value="./board/"/>
       <property name="suffix" value=".jsp"/>
    </bean>
 </beans>

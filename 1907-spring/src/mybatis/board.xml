@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="board">
+	<select id='count' parameterType="bean.Page" resultType="Integer">
+		select count(serial) cnt
+		from board
+		where subject like '%${findStr}%' or content like '%${findStr}%'
+	</select>
+	<select id='select1' parameterType="bean.Page" resultType="mybatis.BoardVo">
+		select * from board
+	</select>
+
+	<select id="select" parameterType="bean.Page" resultType="mybatis.BoardVo">
+		<!-- board.select하면 이 안에있는 문장이 실행이됨  
+		parameterType = 파라메터 타입  / String 매개변수로 전달 받겠다  / 만약 vo로 전달받을거면 bean.BoardVo 처럼 풀네임을 적어줘야한다
+		resultType = 반환형 / 내가 selery 할때 한건일때는 Integer 이지만 , 두건이면 List<Integer> 형으로 자동으로 바뀜 vo도 마찬가지(setter가 있다면 알아서 set해줌) String도 마찬가지
+		resultMap = 각종 세터들이 resultmap에 탑재되어있는 세터들로 빙빙빙빙 돌아 List<boardVo>에 값이담겨 전달됨
+		 -->
+		 
+		 select * from(
+			select rownum rno , M.* from(
+				select  serial ,
+				 		lpad(' ', (level-1)*12 ,<![CDATA['&nbsp;&nbsp;']]> ) || subject  subject,
+				 		id ,to_char(mDate,'rrrr-mm-dd') mDate , hit , getAttCnt(serial) attCnt
+				from board 
+				where subject like '%${findStr}%' or content like '%${findStr}%'
+				connect by prior serial = pserial
+				start with pserial is null
+				order SIBLINGS by serial desc
+			)M
+		)where rno between ${startNo} and ${endNo}
+		  <!-- 여기서 findStr 이 의미하는것은 mybatis.Page.getFindStr(); -->
+	</select>
+	
+	<select id='view' parameterType="Integer" resultType="mybatis.BoardVo">
+		select id , pwd , subject , content , hit , pserial , to_char(mDate,'rrrr-mm-dd') mDate ,serial
+		from board
+		where serial = ${_parameter}<!-- ${serial해도 상관없다} -->
+	</select>
+	<select id='list_att' parameterType="Integer" resultType="mybatis.AttVo">
+		select serial , pserial , oriFile , sysFile 
+		from boardAtt
+		where pserial = ${_parameter}
+	</select>
+	<update id='hit' parameterType="Integer">
+		update board set hit = hit + 1
+		where serial=${_parameter}
+	</update>
+	
+	
+
+
+	
+	
+	
+	<!-- 본문글 -->
+	<!-- insert,delete,update 는 기본적으로 리턴값이 정수이다 즉, 생략가능 -->
+	<!-- 여러가지를 넣어야하는데 굳이 insertAll을 사용하지않는 이유는 시퀀스가 증가 되지않기에 함수를 따로만들어야하기 때문이다 -->
+	<insert id="insert" parameterType="mybatis.BoardVo">
+		insert into board(serial , id , pwd , subject , content ,  mdate , hit)
+		values(seq_board.nextval , #{id} , #{pwd} , #{subject} , #{content} , sysdate , 0)
+	</insert>
+	<insert id="insert_att" parameterType="mybatis.AttVo">
+		insert into boardAtt(serial , pserial , orifile , sysfile)
+		values(seq_boardAtt.nextval , seq_board.currval , #{oriFile} , #{sysFile})
+	</insert>
+	
+	
+	
+	
+	
+	
+	
+	
+	<update id="update" parameterType="mybatis.BoardVo">
+		update board set subject=#{subject}, content=#{content}
+		where serial=#{serial} and pwd = #{pwd}
+	</update>
+	<insert id="att_insert2" parameterType="mybatis.AttVo">
+		insert into boardAtt(serial , pserial , orifile , sysfile)
+		values(seq_boardAtt.nextval , #{serial} , #{oriFile} , #{sysFile})
+	</insert>
+	<delete id="att_delete" parameterType="mybatis.AttVo">
+		delete from boardAtt where sysFile=#{sysFile} or pserial = ${serial}
+	</delete>
+	
+	
+	
+	
+	
+	
+	<select id ='repl_cnt' parameterType="Integer" resultType="Integer">
+		select count(serial) cnt from board where pserial = ${_parameter}
+	</select>
+	<delete id = 'delete' parameterType="mybatis.BoardVo">
+		delete from board where serial = ${serial} and pwd = #{pwd}
+	</delete>
+	<select id='att_list' parameterType="Integer" resultType="mybatis.AttVo">
+		select serial , pserial , oriFile , sysFile 
+		from boardAtt
+		where pserial = ${_parameter}
+	</select>
+	
+	
+	
+	
+	
+	<insert id='repl' parameterType="mybatis.BoardVo">
+		insert into board(serial , id , pwd , subject , content ,  mdate , hit ,pSerial)
+		values(seq_board.nextval , #{id} , #{pwd} , #{subject} , #{content} , sysdate , 0 , #{pSerial})
+	</insert>
+	
+	
+	
+	
+	
+	
+	
+	<!-- 
+	<resultMap type="" id="my_map"></resultMap>
+	 -->
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
