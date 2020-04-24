@@ -2,6 +2,10 @@
 
 *{ margin:0 ; padding:0}
 a{ text-decoration: none}
+html{
+	overflow-y: scroll;
+
+}
 #body{
 	width: 1000px;
 	margin: auto ;
@@ -9,7 +13,7 @@ a{ text-decoration: none}
 #top{
 	height:150px;
 	background-image: url(../images/back.png);
-	margin-bottom:3px;
+	margin-bottom:0px;
 }
 #login{
 	text-align: right;
@@ -18,16 +22,24 @@ a{ text-decoration: none}
 #nav{
 	text-align: right;
 	border-bottom:2px solid #81A92E;
+	position: relative;
+	overflow: hidden;
+	background: #81A92E;
 }
 #nav>a{
 	border:0px solid #71091E;
 	padding-left:5px;
 	padding-right:5px;
 	box-sizing: border-box;
-	border-radius: 20px;
-}
-#nav>a:hover{
+	color:#ff0;
 	background: #81A92E;
+	float: left;
+	border:2px solid #81A92E;
+}
+
+#nav>a:hover{
+	color:#000;
+	border-bottom:2px solid #008000;
 }
 
 #footer{
@@ -45,9 +57,23 @@ a{ text-decoration: none}
 	font-size:.7em;
 }
 
-
-
-
+/* 로그인 --------------------- */
+.login{
+	padding-top : 21px;
+}
+.login #frm_login{
+	width: 300px;
+	margin:100px auto;
+	color : blue;
+	text-align: center;
+}
+.login #frm_login fieldset{
+	padding:30px;
+}	
+.login .btnLogin{
+	width: 94px;
+	height:30px;
+}
 
 
 

@@ -38,6 +38,7 @@
 		<input type='button' id='btnRepl' value='답글'/>
 		<input type='button' id='btnFind' value='목록으로'/>
 		
+		<input type='text' name='pwd'/>
 		<input type='text' name='serial' value='${vo.serial }'/>
 		<input type='text' name='findStr' value='${p.findStr }'/>
 		<input type='text' name='nowPage' value='${p.nowPage }'/>

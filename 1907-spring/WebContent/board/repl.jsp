@@ -6,7 +6,7 @@
 	<form name='frm_brd' id='frm_brd' method='post'>
 		<!-- UI  -->
 		<label>작성자</label>
-		<input type='text' readonly name='id' value='${id }'/><br/>
+		<input type='text'  name='id'/><br/>
 		
 		<label>제 목</label>
 		<input type='text' name='subject' size='90' /><br/>
@@ -17,7 +17,7 @@
 		<input type='password' name='pwd' /><br/>
 	
 		<fieldset><legend>[ 파일 첨부 ]</legend>
-			<input type='file' multiple="multiple" name='attFile'><hr/>
+			<input type='file' multiple="multiple" id='btnAtt' name='attFile'><hr/>
 			<div id='attList'></div>
 		</fieldset>
 
@@ -26,7 +26,7 @@
 		<input type='button' id='btnReplR' value='답변 저장'/>
 		<input type='button' id='btnFind' value='목록으로'/>
 		
-		<input type='text' name='serial'  value='${param.serial }'/>
+		<input type='text' name='pSerial'  value='${param.serial }'/>
 		<input type='text' name='findStr' value='${param.findStr }'/>
 		<input type='text' name='nowPage' value='${param.nowPage }'/>
 	</form>

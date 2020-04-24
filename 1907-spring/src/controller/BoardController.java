@@ -109,53 +109,102 @@ public class BoardController {
 	      List<AttVo> attList = (List<AttVo>)newReq.getAttribute("attList");
 	      msg = dao.insert(vo, attList);
 	      
+	      
+	      
 	      mv.addObject("p",newReq.getAttribute("p"));
 	      mv.addObject("msg", msg);
 	      mv.setViewName("result");
 	      return mv;
 	   }   
 	@RequestMapping(value = "/modify.brd" , method = {RequestMethod.POST})
-	public ModelAndView modify() {
+	public ModelAndView modify(HttpServletRequest req) {
 		ModelAndView mv = new ModelAndView();
-		Object vo = null;
+		int serial = Integer.parseInt(req.getParameter("serial"));
+		
+		BoardVo vo = dao.view(serial, 'm');
+		
+		List<AttVo> attList = dao.getAttList(serial);
+		
+		Page p = new Page();						//이런 반복되는 것은 메서드를 만들어서 간소화 ㄱ ㄱ
+		p.setFindStr(req.getParameter("findStr"));
+		if(req.getParameter("nowPage")==null) {
+			p.setNowPage(1);
+		}else {
+			p.setNowPage(Integer.parseInt(req.getParameter("nowPage")));			
+		}
 		
 		mv.addObject("vo",vo);
+		mv.addObject("attList",attList);
+		mv.addObject("p",p);
 		mv.setViewName("modify");
 		return mv;
 	}
 	@RequestMapping(value = "/modifyR.brd" , method = {RequestMethod.POST})
-	public ModelAndView update() {
+	public ModelAndView update(HttpServletRequest req, HttpServletResponse resp) {
 		ModelAndView mv = new ModelAndView();
-		Object vo = null;
+		BoardVo vo = null;
+		List<AttVo> attList = null;
+		List<AttVo> delList = null;
+		Page p = null;
 		
-		mv.addObject("vo",vo);
+		FileUpload fu = new FileUpload(req, resp);
+		fu.uploading();
+		vo = (BoardVo)req.getAttribute("vo");
+		attList = (List<AttVo>)req.getAttribute("attList");
+		delList = (List<AttVo>)req.getAttribute("delList");
+		String msg = dao.modify(vo, attList, delList);
+		
+		mv.addObject("msg",msg);
+		mv.addObject("p",req.getAttribute("p"));
 		mv.setViewName("result");
 		return mv;
 	}
 	@RequestMapping(value = "/deleteR.brd" , method = {RequestMethod.POST})
-	public ModelAndView delete() {
+	public ModelAndView delete(HttpServletRequest req) {
 		ModelAndView mv = new ModelAndView();
-		Object vo = null;
+		BoardVo vo = new BoardVo();
+		int serial = Integer.parseInt(req.getParameter("serial"));
+		String pwd = req.getParameter("pwd");
+		vo.setSerial(serial);
+		vo.setPwd(pwd);
+		String msg = dao.delete(vo);
+		System.out.println("msg = "+ msg);
 		
-		mv.addObject("vo",vo);
+		Page p = new Page();						//이런 반복되는 것은 메서드를 만들어서 간소화 ㄱ ㄱ
+		p.setFindStr(req.getParameter("findStr"));
+		if(req.getParameter("nowPage")==null) {
+			p.setNowPage(1);
+		}else {
+			p.setNowPage(Integer.parseInt(req.getParameter("nowPage")));			
+		}
+		
+		mv.addObject("p",p);
+		mv.addObject("msg",msg);
 		mv.setViewName("result");
 		return mv;
 	}
 	@RequestMapping(value = "/repl.brd" , method = {RequestMethod.POST})
 	public ModelAndView repl() {
 		ModelAndView mv = new ModelAndView();
-		Object vo = null;
-		
-		mv.addObject("vo",vo);
 		mv.setViewName("repl");
 		return mv;
 	}
 	@RequestMapping(value = "/replR.brd" , method = {RequestMethod.POST})
-	public ModelAndView replR() {
+	public ModelAndView replR(HttpServletRequest req,HttpServletResponse resp) {
 		ModelAndView mv = new ModelAndView();
-		Object vo = null;
+		BoardVo vo = null;
+		List<AttVo> attList = null;
+		Page p = null;
 		
-		mv.addObject("vo",vo);
+		FileUpload fu = new FileUpload(req, resp);
+		fu.uploading();
+		vo = (BoardVo)req.getAttribute("vo");
+		attList = (List<AttVo>)req.getAttribute("attList");
+		p = (Page)req.getAttribute("p");
+		String msg = dao.repl(vo, attList);
+		
+		mv.addObject("msg",msg);
+		mv.addObject("p",p);
 		mv.setViewName("result");
 		return mv;
 	}

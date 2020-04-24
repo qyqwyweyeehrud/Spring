@@ -22,13 +22,14 @@
 
 #board .title{
 	background-color: #81A92E;
+	color: #ffff00;
 }
 #board .title span, #board .list span{
 	display: inline-block;
 }
 
 #board .no { width : 60px; padding-left:20px;}
-#board .subject { width : 450px;}
+#board .subject { width : 500px;}
 #board .id { width : 120px;}
 #board .mDate { width : 120px;}
 #board .hit { width : 50px;}
@@ -37,7 +38,7 @@
 	text-align: right;
 }
 #board .items:hover{
-	background: #eee;
+	background: #DFE4D4;
 }
 #board #paging{
 	border-top : 2px solid #aaa;
